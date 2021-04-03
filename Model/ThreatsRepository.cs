@@ -1,36 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using ThreatParser.Model.Entities;
 
 namespace ThreatParser.Model
 {
-    public static class ThreatsRepository
+    public class ThreatsRepository : IThreatsRepository
     {
+        public delegate void OnDownloadSuccess(List<Threat> threats);
+        public delegate void OnDownloadError(string message);
         public static List<Threat> Threats { get; private set; }
-        private static string fileUrl = @"https://bdu.fstec.ru/files/documents/thrlist.xlsx";
-        private static string localCachePath = @"/threats_list.csv";
 
-        static ThreatsRepository()
+        private static string remoteFileUri = @"https://bdu.fstec.ru/files/documents/thrlist.xlsx";
+        private static string remoteFileName = "thrlist.xlsx";
+        private static string localCacheUri = @"threats_list.csv";
+
+        public bool IsCacheExists()
         {
-            Threats = new List<Threat>();
+            return File.Exists(localCacheUri);
         }
 
-        public static List<Threat> LoadFromDisk()
+        public List<Threat> LoadFromCache()
         {
             throw new NotImplementedException();
         }
 
-        public static bool DownloadFile(out int progress)
+        public void DownloadFile()
         {
-            throw new NotImplementedException();
+            WebClient webClient = new WebClient();
+            webClient.DownloadFile(remoteFileUri, remoteFileName);
+            ParseToCSV();
         }
 
-        private static List<Threat> ParseFile()
+        private void ParseToCSV()
         {
-            throw new NotImplementedException();
+            //This method should contains parse from xlsx to csv.
+            //But now it is saving same file with csv extension
+            File.Copy(remoteFileName, localCacheUri, true);
         }
     }
 }

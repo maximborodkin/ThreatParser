@@ -9,8 +9,9 @@ namespace ThreatParser.View
 {
     public interface IThreatsView
     {
-        public void ShowThreats(List<Threat> threats);
         public bool ShowDownloadOffer();
         public void ShowNoCache();
+
+        public void ShowDownloadError();
     }
 }

@@ -8,7 +8,7 @@ namespace ThreatParser.Presenter
 {
     public interface IThreatsPresenter
     {
-        public void UpdateFile();
+        public void UpdateLocalCache();
         
     }
 }

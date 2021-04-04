@@ -49,5 +49,10 @@ namespace ThreatParser
         {
             throw new NotImplementedException();
         }
+
+        public void ShowDownloadError()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace ThreatParser.Model
     public interface IThreatsRepository
     {
         public bool IsCacheExists();
-        public List<Threat> LoadFromCache();
-        public void DownloadFile();
+        public void LoadFromCache();
+        public void UpdateLocalCache(out List<(DifferenceType, string, string)> diffs);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ThreatParser.Model;
 using ThreatParser.View;
 
@@ -22,7 +23,7 @@ namespace ThreatParser.Presenter
             {
                 if (view.ShowDownloadOffer())
                 {
-                    UpdateFile();
+                    UpdateLocalCache();
                 } else
                 {
                     view.ShowNoCache();
@@ -30,14 +31,20 @@ namespace ThreatParser.Presenter
             }
             else
             {
-                view.ShowThreats(repository.LoadFromCache());
+                
             }
         }
 
-        public void UpdateFile()
+        public void UpdateLocalCache()
         {
-            repository.DownloadFile();
-            view.ShowThreats(repository.LoadFromCache());
+            List<(DifferenceType, string, string)> diffs;
+            try
+            {
+                repository.UpdateLocalCache(out diffs);
+            } catch (Exception e)
+            {
+                view.ShowDownloadError();
+            }
         }
     }
 }

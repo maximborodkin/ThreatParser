@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreatParser", "ThreatParser.csproj", "{3A786E6B-6942-4783-B13E-578BE359075C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreatParser", "ThreatParser.csproj", "{3A786E6B-6942-4783-B13E-578BE359075C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

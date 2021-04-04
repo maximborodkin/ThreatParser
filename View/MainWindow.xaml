@@ -5,22 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThreatParser"
         mc:Ignorable="d"
-        Title="Threats List" Height="450" Width="800">
+        Title="Threats List" Height="450" Width="800"
+        x:Name="self">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
 
-        <ListView  HorizontalAlignment="Left" Height="Auto" Width="Auto" ItemsSource="{Binding presenter.Threats, UpdateSourceTrigger=PropertyChanged}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Id" Width="Auto" DisplayMemberBinding="{Binding Path = Id}"/>
-                    <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Path = Name}"/>
-                </GridView>
-            </ListView.View>
+        <ListView Margin="10" x:Name="ThreadsList" MouseDoubleClick="ThreadsList_MouseDoubleClick" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <TextBlock Text="{Binding Path=Id}" FontWeight="Bold" />
+                        <TextBlock Text=". " />
+                        <TextBlock Text="{Binding Path=Name}" Width="Auto" TextWrapping="Wrap"/>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
-
-        <Button Grid.Row="1" x:Name="Refresh_Button" Content="Refresh" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="6" Margin="741,0,0,9" Click="Refresh_Button_Click"/>
+        <DockPanel LastChildFill="False" Grid.Row="1">
+            <Button Content="&lt;" DockPanel.Dock="Left" VerticalAlignment="Center" Padding="6" Margin="6" Click="PreviousButton_Click"/>
+            <Button Content="&gt;" DockPanel.Dock="Left" HorizontalAlignment="Left"  VerticalAlignment="Center" Padding="6" Margin="6" Click="NextButton_Click"/>
+            <Button Content="Refresh" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="6" Margin="6" Click="RefreshButton_Click"/>
+        </DockPanel>
     </Grid>
 </Window>

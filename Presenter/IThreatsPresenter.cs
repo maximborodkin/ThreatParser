@@ -9,8 +9,9 @@ namespace ThreatParser.Presenter
 {
     public interface IThreatsPresenter
     {
-        public List<Threat> Threats { get; }
-        public void UpdateLocalCache();
-        
+        public void RequestinitialPage();
+        public void RequestPreviousPage();
+        public void RequestNextPage();
+        public void UpdateLocalCache(); 
     }
 }

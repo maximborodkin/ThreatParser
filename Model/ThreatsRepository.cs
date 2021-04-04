@@ -14,28 +14,23 @@ namespace ThreatParser.Model
         private static readonly string remoteFileUri = @"https://bdu.fstec.ru/files/documents/thrlist.xlsx";
         private static readonly string remoteFileName = "thrlist.xlsx";
         private static readonly string localCacheUri = @"thrlist.json";
+        private List<Threat> threats;
 
-        public bool IsCacheExists()
-        {
-            return File.Exists(localCacheUri);
-        }
+        public bool IsCacheExists() => File.Exists(localCacheUri);
 
         // Exceptions must be catched in presenter
-        public List<Threat> LoadFromCache()
+        public List<Threat> GetRecordsRange(int startIndex, int count)
         {
-            if (!File.Exists(localCacheUri)) throw new FileNotFoundException("Local chache file not found");
-
-            try
+            if (threats == null)
             {
-                return ReadFromJSON(localCacheUri);
-            } catch (Exception)
-            {
-                throw new IOException();
+                threats = ReadFromJSON(localCacheUri);
             }
+            if (startIndex < 0 || startIndex >= threats.Count) return null;
+            return (from t in threats select t).Skip(startIndex).Take(count).ToList();
         }
 
         // Exceptions must be catched in presenter
-        public List<Threat> UpdateLocalCache(out List<(DifferenceType, string, string)> diffs)
+        public void UpdateLocalCache(out List<(DifferenceType, string, string)> diffs)
         {
             WebClient webClient = new WebClient();
             webClient.DownloadFile(remoteFileUri, remoteFileName);
@@ -45,7 +40,10 @@ namespace ThreatParser.Model
             diffs = CompareLists(oldThreats, newThreats);
 
             WriteToJSON(newThreats);
-            return newThreats;
+
+            if (threats == null) threats = new List<Threat>();
+            threats.Clear();
+            threats.AddRange(newThreats);
         }
 
         private List<Threat> ReadFromXLSX(string fileName)
@@ -75,14 +73,6 @@ namespace ThreatParser.Model
 
         private void WriteToJSON(List<Threat> threats)
         {
-            //using(var fileStream = new FileStream(localCacheUri, FileMode.Create))
-            //{
-            //    using (var streamWriter = new StreamWriter(fileStream))
-            //    {
-            //        streamWriter.WriteLine(Threat.GetCSVHeader());
-            //        threats.ForEach(t => streamWriter.WriteLine(t.ToCSVString()));
-            //    }
-            //}
             string json = JsonConvert.SerializeObject(threats);
             File.WriteAllText(localCacheUri, json);
         }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +23,8 @@ namespace ThreatParser
     public partial class MainWindow : Window, IThreatsView
     {
         private IThreatsPresenter presenter;
+        public ObservableCollection<Threat> CurrentPage { get; set; } = new ObservableCollection<Threat>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,8 +33,9 @@ namespace ThreatParser
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            presenter = new ThreatsPersenter(this);
-
+            presenter = new ThreatsPresenter(this);
+            presenter.RequestinitialPage();
+            ThreadsList.ItemsSource = CurrentPage;
         }
 
         public bool ShowDownloadOffer()
@@ -41,32 +46,52 @@ namespace ThreatParser
 
         public void ShowNoCache()
         {
-            throw new NotImplementedException();
+            MessageBox.Show("Ну и зря. Сиди теперь без файла");
+            //throw new NotImplementedException();
         }
 
         public void ShowThreats(List<Threat> threats)
         {
-            throw new NotImplementedException();
+            CurrentPage.Clear();
+            threats.ForEach(t => CurrentPage.Add(t));
         }
 
         public void ShowDownloadError()
         {
-            throw new NotImplementedException();
-        }
-
-        private void Refresh_Button_Click(object sender, RoutedEventArgs e)
-        {
-            presenter.UpdateLocalCache();
+            MessageBox.Show("Ошибка при загрузке файла");
+            //throw new NotImplementedException();
         }
 
         public void ShowCacheError()
         {
-            throw new NotImplementedException();
+            MessageBox.Show("Ошибка при загрузке кэша");
+            //throw new NotImplementedException();
         }
 
         public void ShowDifferences(List<(DifferenceType, string, string)> diffs)
         {
-            throw new NotImplementedException();
+            MessageBox.Show("Сейчас должны показаться различия");
+            //throw new NotImplementedException();
+        }
+
+        private void PreviousButton_Click(object sender, RoutedEventArgs e)
+        {
+            presenter.RequestPreviousPage();
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            presenter.RequestNextPage();
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            presenter.UpdateLocalCache();
+        }
+
+        private void ThreadsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show(((sender as ListView).SelectedItem as Threat).ToCSVString());
         }
     }
 }

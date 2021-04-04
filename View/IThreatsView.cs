@@ -11,7 +11,8 @@ namespace ThreatParser.View
     {
         public bool ShowDownloadOffer();
         public void ShowNoCache();
-
         public void ShowDownloadError();
+        public void ShowCacheError();
+        public void ShowDifferences(List<(DifferenceType, string, string)> diffs);
     }
 }

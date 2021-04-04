@@ -24,12 +24,11 @@ namespace ThreatParser
         public MainWindow()
         {
             InitializeComponent();
-            
+            Loaded += MainWindow_Loaded;
         }
 
-        protected override void OnContentRendered(EventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            base.OnContentRendered(e);
             presenter = new ThreatsPersenter(this);
 
         }
@@ -51,6 +50,21 @@ namespace ThreatParser
         }
 
         public void ShowDownloadError()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Refresh_Button_Click(object sender, RoutedEventArgs e)
+        {
+            presenter.UpdateLocalCache();
+        }
+
+        public void ShowCacheError()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowDifferences(List<(DifferenceType, string, string)> diffs)
         {
             throw new NotImplementedException();
         }

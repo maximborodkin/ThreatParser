@@ -10,10 +10,13 @@ namespace ThreatParser.Presenter
         private IThreatsView view;
         private IThreatsRepository repository;
 
+        public List<Threat> Threats { get; private set; }
+
         public ThreatsPersenter(IThreatsView view) 
         {
             this.view = view;
             repository = new ThreatsRepository();
+            Threats = new List<Threat>();
             InitializePresenter();
         }
 
@@ -27,24 +30,38 @@ namespace ThreatParser.Presenter
                 } else
                 {
                     view.ShowNoCache();
+                    return;
                 }
             }
             else
             {
-                
+                List<Threat> threats;
+                try
+                {
+                    threats = repository.LoadFromCache();
+                    Threats.Clear();
+                    Threats.AddRange(threats);
+                } catch(Exception e)
+                {
+                    view.ShowCacheError();
+                }
+                Console.WriteLine();
             }
         }
 
         public void UpdateLocalCache()
         {
-            List<(DifferenceType, string, string)> diffs;
             try
             {
-                repository.UpdateLocalCache(out diffs);
+                List<Threat> threats = repository.UpdateLocalCache(out List<(DifferenceType, string, string)> diffs);
+                Threats.Clear();
+                Threats.AddRange(threats);
+                view.ShowDifferences(diffs);
             } catch (Exception e)
             {
                 view.ShowDownloadError();
             }
         }
+
     }
 }

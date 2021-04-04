@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using Newtonsoft.Json;
 
 namespace ThreatParser.Model
 {
     public partial class ThreatsRepository : IThreatsRepository
     {
-        public static List<Threat> Threats { get; private set; }
-
         private static readonly string remoteFileUri = @"https://bdu.fstec.ru/files/documents/thrlist.xlsx";
         private static readonly string remoteFileName = "thrlist.xlsx";
-        private static readonly string localCacheUri = @"thrlist.csv";
+        private static readonly string localCacheUri = @"thrlist.json";
 
         public bool IsCacheExists()
         {
@@ -21,27 +21,31 @@ namespace ThreatParser.Model
         }
 
         // Exceptions must be catched in presenter
-        public void LoadFromCache()
+        public List<Threat> LoadFromCache()
         {
-            List<Threat> threats = ReadFromCSV(localCacheUri);
-            Threats.Clear();
-            Threats.AddRange(threats);
+            if (!File.Exists(localCacheUri)) throw new FileNotFoundException("Local chache file not found");
+
+            try
+            {
+                return ReadFromJSON(localCacheUri);
+            } catch (Exception)
+            {
+                throw new IOException();
+            }
         }
 
         // Exceptions must be catched in presenter
-        public void UpdateLocalCache(out List<(DifferenceType, string, string)> diffs)
+        public List<Threat> UpdateLocalCache(out List<(DifferenceType, string, string)> diffs)
         {
             WebClient webClient = new WebClient();
             webClient.DownloadFile(remoteFileUri, remoteFileName);
 
-            List<Threat> oldThreats = ReadFromCSV(localCacheUri);
+            List<Threat> oldThreats = ReadFromJSON(localCacheUri);
             List<Threat> newThreats = ReadFromXLSX(remoteFileName);
             diffs = CompareLists(oldThreats, newThreats);
 
-            Threats.Clear();
-            Threats.AddRange(newThreats);
-
-            WriteToCSV(newThreats);
+            WriteToJSON(newThreats);
+            return newThreats;
         }
 
         private List<Threat> ReadFromXLSX(string fileName)
@@ -59,25 +63,28 @@ namespace ThreatParser.Model
             return threats;
         }
 
-        private List<Threat> ReadFromCSV(string fileName)
+        private List<Threat> ReadFromJSON(string fileName)
         {
-            if (!File.Exists(localCacheUri)) throw new FileNotFoundException("Local chache file not found");
+            if (!File.Exists(fileName)) return new List<Threat>();
 
-            var query = new ExcelQueryFactory(localCacheUri);
-            var threats = from t in query.Worksheet<Threat>() select t;
-            return new List<Threat>();
+            string json = File.ReadAllText(fileName);
+            List<Threat> threats = JsonConvert.DeserializeObject<List<Threat>>(json);
+
+            return threats;
         }
 
-        private void WriteToCSV(List<Threat> threats)
+        private void WriteToJSON(List<Threat> threats)
         {
-            using(var fileStream = new FileStream(localCacheUri, FileMode.Truncate))
-            {
-                using (var streamWriter = new StreamWriter(fileStream))
-                {
-                    streamWriter.WriteLine(Threat.GetCSVHeader());
-                    threats.ForEach(t => streamWriter.WriteLine(t.ToCSVString()));
-                }
-            }
+            //using(var fileStream = new FileStream(localCacheUri, FileMode.Create))
+            //{
+            //    using (var streamWriter = new StreamWriter(fileStream))
+            //    {
+            //        streamWriter.WriteLine(Threat.GetCSVHeader());
+            //        threats.ForEach(t => streamWriter.WriteLine(t.ToCSVString()));
+            //    }
+            //}
+            string json = JsonConvert.SerializeObject(threats);
+            File.WriteAllText(localCacheUri, json);
         }
 
         private List<(DifferenceType, string, string)> CompareLists(List<Threat> oldList, List<Threat> newList)

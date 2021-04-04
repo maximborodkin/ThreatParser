@@ -5,8 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThreatParser"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Threats List" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="48"/>
+        </Grid.RowDefinitions>
 
+        <ListView  HorizontalAlignment="Left" Height="Auto" Width="Auto" ItemsSource="{Binding presenter.Threats, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" Width="Auto" DisplayMemberBinding="{Binding Path = Id}"/>
+                    <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Path = Name}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Button Grid.Row="1" x:Name="Refresh_Button" Content="Refresh" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="6" Margin="741,0,0,9" Click="Refresh_Button_Click"/>
     </Grid>
 </Window>

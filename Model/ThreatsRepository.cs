@@ -30,7 +30,7 @@ namespace ThreatParser.Model
         }
 
         // Exceptions must be catched in presenter
-        public void UpdateLocalCache(out List<(DifferenceType, string, string)> diffs)
+        public void UpdateLocalCache(out List<ThreatsDifference> diffs)
         {
             WebClient webClient = new WebClient();
             webClient.DownloadFile(remoteFileUri, remoteFileName);
@@ -77,9 +77,25 @@ namespace ThreatParser.Model
             File.WriteAllText(localCacheUri, json);
         }
 
-        private List<(DifferenceType, string, string)> CompareLists(List<Threat> oldList, List<Threat> newList)
+        private List<ThreatsDifference> CompareLists(List<Threat> oldList, List<Threat> newList)
         {
-            return new List<(DifferenceType, string, string)>(3);
+            List<ThreatsDifference> threatsDifferences = new List<ThreatsDifference>();
+            newList.ForEach(newThreat =>
+            {
+                var oldThreat = oldList.Find(o => o.Id == newThreat.Id);
+                if(oldThreat == null)
+                {
+                    threatsDifferences.Add(new ThreatsDifference(DifferenceType.Add, null, newThreat));
+                } 
+                else if (!oldThreat.Equals(newThreat))
+                {
+                    threatsDifferences.Add(new ThreatsDifference(DifferenceType.Change, oldThreat, newThreat));
+                }
+            });
+            List<Threat> deletedThreats = oldList.FindAll(o => newList.All(n => n.Id != o.Id)).ToList();
+            deletedThreats.ForEach(d => threatsDifferences.Add(new ThreatsDifference(DifferenceType.Remove, d, null)));
+
+            return threatsDifferences;
         }
     }
 }

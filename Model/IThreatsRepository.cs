@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ThreatParser.Model
 {
     public interface IThreatsRepository
     {
         public bool IsCacheExists();
-        public void UpdateLocalCache(out List<(DifferenceType, string, string)> diffs);
+        public void UpdateLocalCache(out List<ThreatsDifference> diffs);
         public List<Threat> GetRecordsRange(int startIndex, int count);
     }
 }

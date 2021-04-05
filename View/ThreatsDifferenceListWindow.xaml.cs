@@ -24,12 +24,6 @@ namespace ThreatParser.View
             Owner = owner;
             DifferencesList.AddRange(diffs);
             Owner.Closed += (_, _) => Close();
-            Loaded += ThreatsDifferenceListWindow_Loaded;
-        }
-
-        private void ThreatsDifferenceListWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            DifferencesListView.ItemsSource = DifferencesList;
         }
 
         private void DifferencesListView_MouseDoubleClick(object sender, MouseButtonEventArgs a)

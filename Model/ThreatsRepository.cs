@@ -31,7 +31,7 @@ namespace ThreatParser.Model
         public void UpdateLocalCache(out List<ThreatsDifference> diffs)
         {
             WebClient webClient = new WebClient();
-            //webClient.DownloadFile(remoteFileUri, remoteFileName);
+            webClient.DownloadFile(remoteFileUri, remoteFileName);
 
             List<Threat> oldThreats = ReadFromJSON(localCacheUri);
             List<Threat> newThreats = ReadFromXLSX(remoteFileName);
@@ -72,7 +72,7 @@ namespace ThreatParser.Model
         private void WriteToJSON(List<Threat> threats)
         {
             string json = JsonConvert.SerializeObject(threats);
-            //File.WriteAllText(localCacheUri, json);
+            File.WriteAllText(localCacheUri, json);
         }
 
         private List<ThreatsDifference> CompareLists(List<Threat> oldList, List<Threat> newList)

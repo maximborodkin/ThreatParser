@@ -21,7 +21,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="{Binding ElementName=self, Path=DifferencesList.Count}" ContentStringFormat="Список изменений ({0})" HorizontalAlignment="Center"/>
-        <ListView Grid.Row="1" x:Name="DifferencesListView" MouseDoubleClick="DifferencesListView_MouseDoubleClick" ScrollViewer.CanContentScroll="True">
+        <ListView Grid.Row="1" ItemsSource="{Binding ElementName=self, Path=DifferencesList}" x:Name="DifferencesListView" MouseDoubleClick="DifferencesListView_MouseDoubleClick" ScrollViewer.CanContentScroll="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <WrapPanel>

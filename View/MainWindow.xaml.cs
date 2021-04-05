@@ -17,14 +17,8 @@ namespace ThreatParser
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += MainWindow_Loaded;
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
             presenter = new ThreatsPresenter(this);
             presenter.RequestInitialPage();
-            ThreadsListView.ItemsSource = CurrentPage;
         }
 
         public bool ShowDownloadOffer()
@@ -60,6 +54,7 @@ namespace ThreatParser
         public void ShowDifferences(List<ThreatsDifference> diffs)
         {
             RefreshButton.IsEnabled = true;
+            presenter.RequestInitialPage();
             if(diffs.Count == 0)
             {
                 MessageBox.Show("Файл успешно загружен. Изменений не найдено", "", MessageBoxButton.OK, MessageBoxImage.Information);

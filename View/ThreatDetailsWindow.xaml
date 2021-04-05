@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ThreatParser.View"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="ThreatDetailsWindow" Height="500" Width="500" MinHeight="500" MinWidth="400"
+        Title="ThreatDetailsWindow" Height="Auto" Width="500" MinHeight="500" MinWidth="400"
         x:Name="self">
     <Window.Resources>
         <local:BooleanToStringValueConverter x:Key="BooleanToStringValueConverter" />
@@ -32,24 +32,24 @@
 
         <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,6,0,0">
             <Label  Content="Источник угрозы" FontWeight="Bold"/>
-            <TextBlock Grid.Row="2" Text="{Binding ElementName=self, Path=Threat.Source}" TextWrapping="WrapWithOverflow"/>
+            <TextBlock Padding="6,0,6,0" Grid.Row="2" Text="{Binding ElementName=self, Path=Threat.Source}" TextWrapping="WrapWithOverflow"/>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,6,0,0">
             <Label  Content="Объект воздействия" FontWeight="Bold"/>
-            <TextBlock Grid.Row="3" Text="{Binding ElementName=self, Path=Threat.InteractionObject}" TextWrapping="WrapWithOverflow"/>
+            <TextBlock Padding="6,0,6,0" Grid.Row="3" Text="{Binding ElementName=self, Path=Threat.InteractionObject}" TextWrapping="WrapWithOverflow"/>
         </StackPanel>
         
         <StackPanel Grid.Row="4">
             <Label Content="Угрозы" FontWeight="Bold"/>
-            <TextBlock>
+            <TextBlock Padding="6,0,6,0">
                 <Run Text="Угроза конфиденциальности: "/>
                 <Run Text="{Binding ElementName=self, Path=Threat.ConfidentialityBreach, Converter={StaticResource BooleanToStringValueConverter}}"/>
                 <LineBreak/>
                 <Run Text="Угроза целостности: "/>
                 <Run Text="{Binding ElementName=self, Path=Threat.IntegrityBreach, Converter={StaticResource BooleanToStringValueConverter}}"/>
                 <LineBreak/>
-                <Run Text="Угроза доступности"/>
+                <Run Text="Угроза доступности: "/>
                 <Run Text="{Binding ElementName=self, Path=Threat.AvailabilityBreach, Converter={StaticResource BooleanToStringValueConverter}}"/>
             </TextBlock>
         </StackPanel>

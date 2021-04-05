@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Windows.Threading;
 using ThreatParser.Model;
 using ThreatParser.View;
 
@@ -37,15 +39,18 @@ namespace ThreatParser.Presenter
 
         public void UpdateLocalCache()
         {
-            try
+            new Thread(() =>
             {
-                repository.UpdateLocalCache(out List<(DifferenceType, string, string)> diffs);
-                view.ShowDifferences(diffs);
-            }
-            catch (Exception)
-            {
-                view.ShowDownloadError();
-            }
+                try
+                {
+                    repository.UpdateLocalCache(out List<(DifferenceType, string, string)> diffs);
+                    view.ShowDifferences(diffs);
+                }
+                catch (Exception)
+                {
+                    view.ShowDownloadError();
+                }
+            }).Start();
         }
 
         public void RequestinitialPage()
@@ -68,14 +73,20 @@ namespace ThreatParser.Presenter
         {
             if (CheckCache())
             {
+                //Get dispatcher of MainThread
+                var mainDispatcher = Dispatcher.CurrentDispatcher;
                 try
                 {
-                    List<Threat> threats = repository.GetRecordsRange(startIndex, pageRecordsCount);
-                    if(threats != null)
+                    new Thread(() =>
                     {
-                        currentPageStartIndex = startIndex;
-                        view.ShowThreats(threats);
-                    }
+                        List<Threat> threats = repository.GetRecordsRange(startIndex, pageRecordsCount);
+                        if (threats != null)
+                        {
+                            currentPageStartIndex = startIndex;
+                            //Run ui operation in MainThread
+                            mainDispatcher?.Invoke(() => view.ShowThreats(threats));
+                        }
+                    }).Start();
                 }
                 catch (IndexOutOfRangeException) { }
                 catch (Exception)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +12,7 @@ namespace ThreatParser
     public partial class MainWindow : Window, IThreatsView
     {
         private IThreatsPresenter presenter;
-        public ObservableCollection<Threat> CurrentPage { get; set; } = new ObservableCollection<Threat>();
+        public ObservableCollection<Threat> CurrentPage { get; private set; } = new ObservableCollection<Threat>();
 
         public MainWindow()
         {
@@ -24,44 +23,51 @@ namespace ThreatParser
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             presenter = new ThreatsPresenter(this);
-            presenter.RequestinitialPage();
-            ThreadsList.ItemsSource = CurrentPage;
+            presenter.RequestInitialPage();
+            ThreadsListView.ItemsSource = CurrentPage;
         }
 
         public bool ShowDownloadOffer()
         {
-            string question = "There is no downloaded local cache file. Would you like to download it now?";
+            string question = "Локальный кэш не найден. ";
             return MessageBox.Show(question, "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
         }
 
         public void ShowNoCache()
         {
-            MessageBox.Show("Ну и зря. Сиди теперь без файла");
-            //throw new NotImplementedException();
+            MessageBox.Show("Ну и зря. Сиди теперь без файла.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         public void ShowThreats(List<Threat> threats)
         {
+            RefreshButton.IsEnabled = true;
             CurrentPage.Clear();
-            threats.ForEach(t => CurrentPage.Add(t));
+            CurrentPage.AddRange(threats);
         }
 
         public void ShowDownloadError()
         {
-            MessageBox.Show("Ошибка при загрузке файла");
-            //throw new NotImplementedException();
+            RefreshButton.IsEnabled = true;
+            MessageBox.Show("Ошибка при загрузке файла. Попробуйте ещё раз.", "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void ShowCacheError()
         {
-            MessageBox.Show("Ошибка при загрузке кэша");
-            //throw new NotImplementedException();
+            RefreshButton.IsEnabled = true;
+            MessageBox.Show("Ошибка при загрузке кэша. Попробуйте заново скачать файл.", "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public void ShowDifferences(List<(DifferenceType, string, string)> diffs)
+        public void ShowDifferences(List<ThreatsDifference> diffs)
         {
-            MessageBox.Show("Сейчас должны показаться различия");
-            //throw new NotImplementedException();
+            RefreshButton.IsEnabled = true;
+            if(diffs.Count == 0)
+            {
+                MessageBox.Show("Файл успешно загружен. Изменений не найдено", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            } else
+            {
+                new ThreatsDifferenceListWindow(this, diffs).Show();
+            }
         }
 
         private void PreviousButton_Click(object sender, RoutedEventArgs e)
@@ -77,6 +83,7 @@ namespace ThreatParser
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             presenter.UpdateLocalCache();
+            RefreshButton.IsEnabled = false;
         }
 
         private void ThreadsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -85,6 +92,7 @@ namespace ThreatParser
             if(threat != null)
             {
                 ThreatDetailsWindow detailsWindow = new ThreatDetailsWindow(this, threat);
+                detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 detailsWindow.Show();
             }
         }

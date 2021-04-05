@@ -8,9 +8,8 @@ namespace ThreatParser
         {
             foreach(var element in elements)
             {
-                collection.Add(element);
+                collection.Add(element); 
             }
         }
     } 
-    
 }

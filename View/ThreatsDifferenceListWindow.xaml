@@ -1,0 +1,36 @@
+﻿<Window x:Class="ThreatParser.View.ThreatsDifferenceListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ThreatParser.View"
+        mc:Ignorable="d"
+        Title="ThreatsDifferenceListWindow" Height="400" Width="Auto" MinHeight="400" MinWidth="500"
+        x:Name="self"
+        WindowStartupLocation="CenterScreen">
+    
+    <Window.Resources>
+        <local:EnumToStringValueConverter x:Key="EnumToStringValueConverter" />
+        <local:EnumToColorConverter x:Key="EnumToColorConverter" />
+        <local:ThreadsDifferenceToIdValueConverter x:Key="ThreadsDifferenceToIdValueConverter" />
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Content="{Binding ElementName=self, Path=DifferencesList.Count}" ContentStringFormat="Список изменений ({0})" HorizontalAlignment="Center"/>
+        <ListView Grid.Row="1" x:Name="DifferencesListView" MouseDoubleClick="DifferencesListView_MouseDoubleClick" ScrollViewer.CanContentScroll="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <Label Content="{Binding Path=DifferenceType, Converter={StaticResource EnumToStringValueConverter}}" Foreground="{Binding Path=DifferenceType, Converter={StaticResource EnumToColorConverter}}"/>
+                        <Label Content="{Binding Converter={StaticResource ThreadsDifferenceToIdValueConverter}}" ContentStringFormat="Идентификатор УБИ: {0}"/>
+                        <Label Content="{Binding Path=DifferentFieldsNames}" ContentStringFormat="Изменённые поля: {0}"/>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Window>

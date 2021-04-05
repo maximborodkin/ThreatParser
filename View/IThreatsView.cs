@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ThreatParser.Model;
 
 namespace ThreatParser.View
@@ -13,7 +9,7 @@ namespace ThreatParser.View
         public void ShowNoCache();
         public void ShowDownloadError();
         public void ShowCacheError();
-        public void ShowDifferences(List<(DifferenceType, string, string)> diffs);
+        public void ShowDifferences(List<ThreatsDifference> diffs);
         public void ShowThreats(List<Threat> threats);
     }
 }

@@ -39,21 +39,22 @@ namespace ThreatParser.Presenter
 
         public void UpdateLocalCache()
         {
+            var mainDispatcher = Dispatcher.CurrentDispatcher;
             new Thread(() =>
             {
                 try
                 {
-                    repository.UpdateLocalCache(out List<(DifferenceType, string, string)> diffs);
-                    view.ShowDifferences(diffs);
+                    repository.UpdateLocalCache(out List<ThreatsDifference> diffs);
+                    mainDispatcher?.Invoke(() => view.ShowDifferences(diffs));
                 }
-                catch (Exception)
+                catch (Exception) 
                 {
-                    view.ShowDownloadError();
+                    mainDispatcher?.Invoke(() => view.ShowDownloadError());
                 }
             }).Start();
         }
 
-        public void RequestinitialPage()
+        public void RequestInitialPage()
         {
             GetRecordsRange(0);
         }

@@ -14,12 +14,13 @@
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
 
-        <ListView Margin="10" x:Name="ThreadsList" MouseDoubleClick="ThreadsList_MouseDoubleClick" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListView Margin="10" x:Name="ThreadsListView" MouseDoubleClick="ThreadsList_MouseDoubleClick" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <WrapPanel>
-                        <TextBlock Text="{Binding Path=Id}" FontWeight="Bold" />
-                        <TextBlock Text=". " />
+                        <TextBlock Text="УБИ." FontWeight="DemiBold"/>
+                        <TextBlock Text="{Binding Path=Id}" FontWeight="DemiBold" />
+                        <TextBlock Text=" — " />
                         <TextBlock Text="{Binding Path=Name}" Width="Auto" TextWrapping="Wrap"/>
                     </WrapPanel>
                 </DataTemplate>
@@ -28,7 +29,7 @@
         <DockPanel LastChildFill="False" Grid.Row="1">
             <Button Content="&lt;" DockPanel.Dock="Left" VerticalAlignment="Center" Padding="6" Margin="6" Click="PreviousButton_Click"/>
             <Button Content="&gt;" DockPanel.Dock="Left" HorizontalAlignment="Left"  VerticalAlignment="Center" Padding="6" Margin="6" Click="NextButton_Click"/>
-            <Button Content="Refresh" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="6" Margin="6" Click="RefreshButton_Click"/>
+            <Button x:Name="RefreshButton" Content="Обновить" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="6" Margin="6" Click="RefreshButton_Click"/>
         </DockPanel>
     </Grid>
 </Window>

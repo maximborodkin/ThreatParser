@@ -1,29 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using ThreatParser.Model;
 
 namespace ThreatParser.View
 {
-    /// <summary>
-    /// Interaction logic for ThreatDetailsWindow.xaml
-    /// </summary>
     public partial class ThreatDetailsWindow : Window, INotifyPropertyChanged
     {
+        private string title;
+        public string WindowTitle 
+        {
+            get => title;
+            set
+            {
+                title = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WindowTitle)));
+            }
+        }
         private Threat threat;
-        
         public Threat Threat 
         { 
             get => threat; 
@@ -35,11 +31,17 @@ namespace ThreatParser.View
         }     
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public ThreatDetailsWindow(Window owner, Threat threat, string title) : this(owner, threat)
+        {
+            WindowTitle = title;
+        }
+
         public ThreatDetailsWindow(Window owner, Threat threat)
         {
             InitializeComponent();
             Owner = owner;
             Threat = threat;
+            Owner.Closed += (_, _) => Close();
         }
     }
 

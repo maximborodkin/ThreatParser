@@ -24,7 +24,7 @@ namespace ThreatParser
         {
             InitializeComponent();
             presenter = new ThreatsPresenter(this);
-            presenter.RequestInitialPage();
+            Loaded += (_,_) => presenter.RequestInitialPage();
         }
 
         public bool ShowDownloadOffer()

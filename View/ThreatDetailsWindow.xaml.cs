@@ -19,6 +19,7 @@ namespace ThreatParser.View
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WindowTitle)));
             }
         }
+
         private Threat threat;
         public Threat Threat 
         { 
@@ -29,6 +30,7 @@ namespace ThreatParser.View
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Threat)));
             }
         }     
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ThreatDetailsWindow(Window owner, Threat threat, string title) : this(owner, threat)
@@ -45,12 +47,15 @@ namespace ThreatParser.View
         }
     }
 
-    public class BooleanToStringValueConverter : IValueConverter
+    internal class BooleanToStringValueConverter : IValueConverter
     {
+        private const string yes = "да";
+        private const string no = "нет";
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-            (value is bool && (bool)value) ? "да" : "нет";
+            (value is bool && (bool)value) ? yes : no;
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-            value is string && (string)value == "да";
+            value is string && (string)value == yes;
     }
 }

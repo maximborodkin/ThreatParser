@@ -22,16 +22,16 @@ namespace ThreatParser.Model
         {
             if (OldThreat == null || NewThreat == null) return "Все";
 
-            StringBuilder result = new StringBuilder();
-            if (OldThreat.Name != NewThreat.Name) result.Append("Наименование УБИ, ");
-            if (OldThreat.Description != NewThreat.Description) result.Append("Описание, ");
-            if (OldThreat.Source != NewThreat.Source) result.Append("Источник угрозы, ");
-            if (OldThreat.InteractionObject != NewThreat.InteractionObject) result.Append("Объект воздействия, ");
-            if (OldThreat.ConfidentialityBreach != NewThreat.ConfidentialityBreach) result.Append("Нарушение конфиденциальности, ");
-            if (OldThreat.IntegrityBreach != NewThreat.IntegrityBreach) result.Append("Нарушение целостности, ");
-            if (OldThreat.AvailabilityBreach != NewThreat.AvailabilityBreach) result.Append("Нарушение доступности, ");
+            List<string> diffs = new List<string>();
+            if (OldThreat.Name != NewThreat.Name) diffs.Add(Threat.NameAttrName);
+            if (OldThreat.Description != NewThreat.Description) diffs.Add(Threat.DescriptionAttrName);
+            if (OldThreat.Source != NewThreat.Source) diffs.Add(Threat.SourceAttrName);
+            if (OldThreat.InteractionObject != NewThreat.InteractionObject) diffs.Add(Threat.InteractionObjectAttrName);
+            if (OldThreat.ConfidentialityBreach != NewThreat.ConfidentialityBreach) diffs.Add(Threat.ConfidentialityBreachAttrName);
+            if (OldThreat.IntegrityBreach != NewThreat.IntegrityBreach) diffs.Add(Threat.IntegrityBreachAttrName);
+            if (OldThreat.AvailabilityBreach != NewThreat.AvailabilityBreach) diffs.Add(Threat.AvailabilityBreachAttrName);
 
-            return result.ToString().Trim(',', ' ');
+            return string.Join(", ", diffs);
         }
     }
 }

@@ -9,9 +9,9 @@ namespace ThreatParser.Model
 {
     public partial class ThreatsRepository : IThreatsRepository
     {
-        private static readonly string remoteFileUri = @"https://bdu.fstec.ru/files/documents/thrlist.xlsx";
-        private static readonly string remoteFileName = "thrlist.xlsx";
-        private static readonly string localCacheUri = @"thrlist.json";
+        private const string remoteFileUri = @"https://bdu.fstec.ru/files/documents/thrlist.xlsx";
+        private const string remoteFileName = "thrlist.xlsx";
+        private const string localCacheUri = @"thrlist.json";
         private List<Threat> threats;
 
         public bool IsCacheExists() => File.Exists(localCacheUri);
@@ -90,8 +90,9 @@ namespace ThreatParser.Model
                     threatsDifferences.Add(new ThreatsDifference(DifferenceType.Change, oldThreat, newThreat));
                 }
             });
+
             List<Threat> deletedThreats = oldList.FindAll(o => newList.All(n => n.Id != o.Id)).ToList();
-            deletedThreats.ForEach(d => threatsDifferences.Add(new ThreatsDifference(DifferenceType.Remove, d, null)));
+            deletedThreats.ForEach(deletedThreat => threatsDifferences.Add(new ThreatsDifference(DifferenceType.Remove, deletedThreat, null)));
 
             return threatsDifferences;
         }

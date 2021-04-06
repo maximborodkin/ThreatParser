@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThreatParser.View"
+        xmlns:model="clr-namespace:ThreatParser.Model"
         mc:Ignorable="d"
         Title="ThreatDetailsWindow" Height="Auto" Width="500" MinHeight="500" MinWidth="400"
         x:Name="self">
@@ -21,35 +22,42 @@
 
         <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,8,0,0">
             <Label Content="{Binding ElementName=self, Path=WindowTitle}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center"/>
-            <Label Content="{Binding ElementName=self, Path=Threat.Id}" FontWeight="DemiBold" FontSize="14" ContentStringFormat="Идентификатор УБИ: {0}" HorizontalAlignment="Center"/>
+            <TextBlock HorizontalAlignment="Center" FontWeight="DemiBold" FontSize="14">
+                <Run Text="{x:Static model:Threat.IdAttrName}"/>
+                <Run Text=": "/>
+                <Run Text="{Binding ElementName=self, Path=Threat.Id}"/>
+            </TextBlock>
             <TextBlock Text="{Binding ElementName=self, Path=Threat.Name}" FontSize="14" FontWeight="DemiBold" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,8,0,0">
-            <Label  Content="Описание угрозы" FontWeight="Bold"/>
+            <Label  Content="{x:Static model:Threat.DescriptionAttrName}" FontWeight="Bold"/>
             <TextBlock Text="{Binding ElementName=self, Path=Threat.Description}" Padding="6,0,6,0" TextWrapping="WrapWithOverflow"/>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,6,0,0">
-            <Label  Content="Источник угрозы" FontWeight="Bold"/>
+            <Label  Content="{x:Static model:Threat.SourceAttrName}" FontWeight="Bold"/>
             <TextBlock Padding="6,0,6,0" Grid.Row="2" Text="{Binding ElementName=self, Path=Threat.Source}" TextWrapping="WrapWithOverflow"/>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,6,0,0">
-            <Label  Content="Объект воздействия" FontWeight="Bold"/>
+            <Label  Content="{x:Static model:Threat.InteractionObjectAttrName}" FontWeight="Bold"/>
             <TextBlock Padding="6,0,6,0" Grid.Row="3" Text="{Binding ElementName=self, Path=Threat.InteractionObject}" TextWrapping="WrapWithOverflow"/>
         </StackPanel>
         
         <StackPanel Grid.Row="4">
             <Label Content="Угрозы" FontWeight="Bold"/>
             <TextBlock Padding="6,0,6,0">
-                <Run Text="Угроза конфиденциальности: "/>
+                <Run Text="{x:Static model:Threat.ConfidentialityBreachAttrName}"/>
+                <Run Text=": "/>
                 <Run Text="{Binding ElementName=self, Path=Threat.ConfidentialityBreach, Converter={StaticResource BooleanToStringValueConverter}}"/>
                 <LineBreak/>
-                <Run Text="Угроза целостности: "/>
+                <Run Text="{x:Static model:Threat.IntegrityBreachAttrName}"/>
+                <Run Text=": "/>
                 <Run Text="{Binding ElementName=self, Path=Threat.IntegrityBreach, Converter={StaticResource BooleanToStringValueConverter}}"/>
                 <LineBreak/>
-                <Run Text="Угроза доступности: "/>
+                <Run Text="{x:Static model:Threat.AvailabilityBreachAttrName}"/>
+                <Run Text=": "/>
                 <Run Text="{Binding ElementName=self, Path=Threat.AvailabilityBreach, Converter={StaticResource BooleanToStringValueConverter}}"/>
             </TextBlock>
         </StackPanel>

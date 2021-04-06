@@ -59,19 +59,22 @@ namespace ThreatParser.View
         }
     }
 
-    public class EnumToStringValueConverter : IValueConverter
+    internal class EnumToStringValueConverter : IValueConverter
     {
+        private const string add = "Добавление";
+        private const string change = "Изменение";
+        private const string remove = "Удаление";
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is DifferenceType)) return value;
             switch((DifferenceType)value)
             {
                 case DifferenceType.Add:
-                    return "Добавление";
+                    return add;
                 case DifferenceType.Change:
-                    return "Изменение";
+                    return change;
                 case DifferenceType.Remove:
-                    return "Удаление";
+                    return remove;
                 default:
                     return value;
             }
@@ -79,13 +82,13 @@ namespace ThreatParser.View
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value as string == "Добавление") return DifferenceType.Add;
-            else if (value as string == "Удаление") return DifferenceType.Remove;
+            if (value as string == add) return DifferenceType.Add;
+            else if (value as string == remove) return DifferenceType.Remove;
             return DifferenceType.Remove;
         }
     }
 
-    public class EnumToColorConverter : IValueConverter
+    internal class EnumToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -111,7 +114,7 @@ namespace ThreatParser.View
         }
     }
 
-    public class ThreadsDifferenceToIdValueConverter : IValueConverter
+    internal class ThreadsDifferenceToIdValueConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

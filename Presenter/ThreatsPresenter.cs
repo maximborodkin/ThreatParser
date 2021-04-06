@@ -11,8 +11,8 @@ namespace ThreatParser.Presenter
     {
         private IThreatsView view;
         private IThreatsRepository repository;
-        public int currentPageStartIndex = 0;
-        private static readonly int pageRecordsCount = 15;
+        private int currentPageStartIndex = 0;
+        private const int pageRecordsCount = 15;
 
         public ThreatsPresenter(IThreatsView view) 
         {
@@ -39,16 +39,19 @@ namespace ThreatParser.Presenter
 
         public void UpdateLocalCache()
         {
+            //Get dispatcher of MainThread
             var mainDispatcher = Dispatcher.CurrentDispatcher;
             new Thread(() =>
             {
                 try
                 {
                     repository.UpdateLocalCache(out List<ThreatsDifference> diffs);
+                    //Run ui operation in MainThread
                     mainDispatcher?.Invoke(() => view.ShowDifferences(diffs));
                 }
                 catch (Exception) 
                 {
+                    //Run ui operation in MainThread
                     mainDispatcher?.Invoke(() => view.ShowDownloadError());
                 }
             }).Start();

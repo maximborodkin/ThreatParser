@@ -11,8 +11,14 @@ namespace ThreatParser
 {
     public partial class MainWindow : Window, IThreatsView
     {
-        private IThreatsPresenter presenter;
         public ObservableCollection<Threat> CurrentPage { get; private set; } = new ObservableCollection<Threat>();
+        private IThreatsPresenter presenter;
+
+        private const string downloadOfferMessage = "Локальный кэш не найден. Создать его сейчас?";
+        private const string noCacheMessage = "Ну и зря. Сиди теперь без файла. Можешь скачать его по кнопке \"Обновить\"";
+        private const string downloadErrorMessage = "Ошибка при загрузке файла. Попробуйте ещё раз.";
+        private const string cacheErrorMessage = "Ошибка при загрузке кэша. Попробуйте заново скачать файл.";
+        private const string noDifferencesMessage = "Файл успешно загружен. Изменений не найдено.";
 
         public MainWindow()
         {
@@ -23,13 +29,12 @@ namespace ThreatParser
 
         public bool ShowDownloadOffer()
         {
-            string question = "Локальный кэш не найден. ";
-            return MessageBox.Show(question, "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+            return MessageBox.Show(downloadOfferMessage, null, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
         }
 
         public void ShowNoCache()
         {
-            MessageBox.Show("Ну и зря. Сиди теперь без файла.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            MessageBox.Show(noCacheMessage, null, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         public void ShowThreats(List<Threat> threats)
@@ -42,13 +47,13 @@ namespace ThreatParser
         public void ShowDownloadError()
         {
             RefreshButton.IsEnabled = true;
-            MessageBox.Show("Ошибка при загрузке файла. Попробуйте ещё раз.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(downloadErrorMessage, null, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void ShowCacheError()
         {
             RefreshButton.IsEnabled = true;
-            MessageBox.Show("Ошибка при загрузке кэша. Попробуйте заново скачать файл.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(cacheErrorMessage, null, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void ShowDifferences(List<ThreatsDifference> diffs)
@@ -57,7 +62,7 @@ namespace ThreatParser
             presenter.RequestInitialPage();
             if(diffs.Count == 0)
             {
-                MessageBox.Show("Файл успешно загружен. Изменений не найдено", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(noDifferencesMessage, null, MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             } else
             {

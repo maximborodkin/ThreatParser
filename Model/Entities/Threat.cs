@@ -5,28 +5,36 @@ namespace ThreatParser.Model
 {
     public class Threat
     {
-        [ExcelColumn("Идентификатор УБИ")]
+        public const string IdAttrName = "Идентификатор УБИ";
+        [ExcelColumn(columnName: IdAttrName)]
         public int Id { get; set; }
-        
-        [ExcelColumn("Наименование УБИ")]
+
+        public const string NameAttrName = "Наименование УБИ";
+        [ExcelColumn(columnName: NameAttrName)]
         public string Name { get; set; }
 
-        [ExcelColumn("Описание")]
+        public const string DescriptionAttrName = "Описание";
+        [ExcelColumn(columnName: DescriptionAttrName)]
         public string Description { get; set; }
 
-        [ExcelColumn("Источник угрозы (характеристика и потенциал нарушителя)")]
+        public const string SourceAttrName = "Источник угрозы (характеристика и потенциал нарушителя)";
+        [ExcelColumn(columnName: SourceAttrName)]
         public string Source { get; set; }
 
-        [ExcelColumn("Объект воздействия")]
+        public const string InteractionObjectAttrName = "Объект воздействия";
+        [ExcelColumn(columnName: InteractionObjectAttrName)]
         public string InteractionObject { get; set; }
 
-        [ExcelColumn("Нарушение конфиденциальности")]
+        public const string ConfidentialityBreachAttrName = "Нарушение конфиденциальности";
+        [ExcelColumn(columnName: ConfidentialityBreachAttrName)]
         public bool ConfidentialityBreach { get; set; }
 
-        [ExcelColumn("Нарушение целостности")]
+        public const string IntegrityBreachAttrName = "Нарушение целостности";
+        [ExcelColumn(columnName: IntegrityBreachAttrName)]
         public bool IntegrityBreach { get; set; }
 
-        [ExcelColumn("Нарушение доступности")]
+        public const string AvailabilityBreachAttrName = "Нарушение доступности";
+        [ExcelColumn(columnName: AvailabilityBreachAttrName)]
         public bool AvailabilityBreach { get; set; }
 
         public override int GetHashCode()
@@ -46,16 +54,6 @@ namespace ThreatParser.Model
                 && ConfidentialityBreach == another.ConfidentialityBreach
                 && IntegrityBreach == another.IntegrityBreach
                 && AvailabilityBreach == another.AvailabilityBreach;
-        }
-
-        public static string GetCSVHeader()
-        {
-            return $"{nameof(Id)},{nameof(Name)},{nameof(Description)},{nameof(Source)},{nameof(InteractionObject)},{nameof(ConfidentialityBreach)},{nameof(IntegrityBreach)},{nameof(AvailabilityBreach)}";
-        }
-
-        public string ToCSVString()
-        {
-            return $"{Id},{Name},{Description},{Source},{InteractionObject},{ConfidentialityBreach},{IntegrityBreach},{AvailabilityBreach}";
         }
     }
 }
